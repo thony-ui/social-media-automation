@@ -1,0 +1,7 @@
+.env
+/node_modules/
+dump.rdb
+/builds/
+/dist/
+/logs/
+/.cache/
