@@ -33,9 +33,9 @@ export default function DroppableFolderButton({
   onDropPost,
 }: DroppableFolderButtonProps) {
   const [{ isOver, canDrop }, drop] = useDrop({
-    accept: 'post',
+    accept: "post",
     drop: (item: DragItem) => {
-      if (item.type === 'post') {
+      if (item.type === "post") {
         onDropPost(item.id, folderId);
       }
     },
@@ -49,25 +49,27 @@ export default function DroppableFolderButton({
     <div
       ref={drop as unknown as React.Ref<HTMLDivElement>}
       className={`transition-all duration-200 ${
-        isOver && canDrop 
-          ? 'ring-2 ring-blue-500 ring-opacity-50 bg-blue-50 dark:bg-blue-900/20 rounded-md' 
-          : ''
+        isOver && canDrop
+          ? "ring-2 ring-blue-500 ring-opacity-50 bg-blue-50 dark:bg-blue-900/20 rounded-md"
+          : ""
       }`}
     >
       <div className="flex items-center w-full">
         <Button
-          variant={isSelected ? 'default' : 'ghost'}
+          variant={isSelected ? "secondary" : "ghost"}
           className="flex-1 justify-start min-w-0 cursor-pointer"
           onClick={onSelect}
         >
           <FolderPlus className="w-4 h-4 mr-2 flex-shrink-0" />
-          <span className="truncate">{folderName} ({postCount})</span>
+          <span className="truncate">
+            {folderName} ({postCount})
+          </span>
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               className="h-8 w-8 p-0 flex-shrink-0 ml-1 flex items-center justify-center cursor-pointer"
             >
               <MoreHorizontal className="w-4 h-4" />
@@ -78,10 +80,7 @@ export default function DroppableFolderButton({
               <Edit3 className="w-4 h-4 mr-2" />
               Rename
             </DropdownMenuItem>
-            <DropdownMenuItem 
-              onClick={onDelete}
-              className="text-red-600"
-            >
+            <DropdownMenuItem onClick={onDelete} className="text-red-600">
               <Trash2 className="w-4 h-4 mr-2" />
               Delete
             </DropdownMenuItem>

@@ -30,26 +30,28 @@ export default function PostsGrid({
   onGeneratePosts,
 }: PostsGridProps) {
   const getSelectedFolderName = () => {
-    if (!selectedFolderId) return 'All Posts';
-    return folders.find(f => f.id === selectedFolderId)?.name || 'Unknown Folder';
+    if (!selectedFolderId) return "All Posts";
+    return (
+      folders.find((f) => f.id === selectedFolderId)?.name || "Unknown Folder"
+    );
   };
 
   const getPostsCount = () => {
-    return selectedFolderId 
-      ? posts.filter(post => post.folderId === selectedFolderId).length
-      : posts.filter(post => !post.folderId).length;
+    return selectedFolderId
+      ? posts.filter((post) => post.folderId === selectedFolderId).length
+      : posts.filter((post) => !post.folderId).length;
   };
 
   const getDisplayDescription = () => {
-    return selectedFolderId 
+    return selectedFolderId
       ? `${getPostsCount()} posts in this folder`
       : `${getPostsCount()} unorganized posts`;
   };
 
   return (
-    <div className="flex-1">
-      <div className="mb-4">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+    <div className="flex-1 w-full">
+      <div className="mb-4 px-1">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
           {getSelectedFolderName()}
         </h2>
         <p className="text-gray-600 dark:text-gray-300 text-sm">
@@ -58,7 +60,7 @@ export default function PostsGrid({
       </div>
 
       {/* Posts Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 auto-rows-fr">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-6 auto-rows-fr">
         {posts.map((post) => (
           <PostCard
             key={post.id}
@@ -78,13 +80,12 @@ export default function PostsGrid({
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Sparkles className="w-12 h-12 text-gray-400 mb-4" />
             <h3 className="text-lg font-semibold mb-2">
-              {selectedFolderId ? 'No posts in this folder' : 'No posts yet'}
+              {selectedFolderId ? "No posts in this folder" : "No posts yet"}
             </h3>
             <p className="text-gray-600 mb-4">
-              {selectedFolderId 
-                ? 'Drag and drop posts here to organize them'
-                : 'Create your first campaign or generate posts to get started'
-              }
+              {selectedFolderId
+                ? "Drag and drop posts here to organize them"
+                : "Create your first campaign or generate posts to get started"}
             </p>
             {!selectedFolderId && (
               <Button onClick={onGeneratePosts}>

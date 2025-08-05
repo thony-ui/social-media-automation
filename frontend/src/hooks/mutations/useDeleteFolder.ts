@@ -15,7 +15,10 @@ export interface DeleteFolderResponse {
   message: string;
 }
 
-const deleteFolder = async ({ folderId, moveToFolderId }: DeleteFolderData): Promise<DeleteFolderResponse> => {
+const deleteFolder = async ({
+  folderId,
+  moveToFolderId,
+}: DeleteFolderData): Promise<DeleteFolderResponse> => {
   const response = await axiosInstance.delete(`${baseUrl}/${folderId}`, {
     data: moveToFolderId ? { moveToFolderId } : undefined,
   });

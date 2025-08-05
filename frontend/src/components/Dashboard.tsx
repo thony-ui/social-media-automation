@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { ViewType } from "@/types";
 import { usePostOperationsWithMutations } from "@/hooks/usePostOperationsWithMutations";
 import { useGetPosts, useGetFolders } from "@/hooks/queries";
@@ -57,9 +59,7 @@ export default function Dashboard() {
 
   // Custom Hooks - no longer need getMockFolders since we use API
   const postOps = usePostOperationsWithMutations(posts, showToast);
-  const folderOps = useFolderOperationsWithMutations(
-    () => {} // No longer need setFolders since React Query handles the cache
-  );
+  const folderOps = useFolderOperationsWithMutations();
 
   // Remove mock data initialization since we're using API data
 
@@ -152,15 +152,15 @@ export default function Dashboard() {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-        <div className="container mx-auto p-6">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:py-6">
           {/* Header */}
-          <div className="mb-8">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-              <div>
-                <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+          <div className="mb-6 lg:mb-8">
+            <div className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
+              <div className="text-center lg:text-left">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2">
                   AutoContent Studio
                 </h1>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
                   AI-powered content creation and scheduling for your social
                   media success
                 </p>
@@ -175,7 +175,7 @@ export default function Dashboard() {
           </div>
 
           {/* Breadcrumb */}
-          <div className="mb-4 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+          <div className="mb-4 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 px-1">
             <button
               onClick={() => {
                 // Reset to default view - could navigate to main dashboard if needed
@@ -207,38 +207,78 @@ export default function Dashboard() {
             onGeneratePosts={() => setIsGenerateFormOpen(true)}
             onCreatePost={handleCreatePost}
             onCreateFolder={handleCreateFolder}
-            onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-            isSidebarOpen={isSidebarOpen}
           />
 
           {/* Main Content */}
           {selectedView === "posts" && (
-            <div className="flex gap-6">
-              <FolderSidebar
-                folders={folders}
-                selectedFolderId={selectedFolderId}
-                unorganizedPostsCount={postOps.getUnorganizedPosts().length}
-                isOpen={isSidebarOpen}
-                onSelectFolder={handleSelectFolder}
-                onEditFolder={handleEditFolder}
-                onDeleteFolder={handleDeleteFolderRequest}
-                onDropPost={postOps.handleDropPostInFolder}
-                getPostsInFolderCount={(folderId) =>
-                  postOps.getPostsInFolder(folderId).length
-                }
-              />
+            <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
+              {/* Mobile Folder Toggle */}
+              <div className="lg:hidden sticky">
+                <Button
+                  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                  className="w-full mb-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  variant="outline"
+                >
+                  <Menu className="w-4 h-4 mr-2" />
+                  {isSidebarOpen ? "Hide Folders" : "Show Folders"}
+                </Button>
+              </div>
 
-              <PostsGrid
-                posts={postOps.getDisplayedPosts(selectedFolderId)}
-                folders={folders}
-                selectedFolderId={selectedFolderId}
-                onMovePost={postOps.handleMovePost}
-                onEditPost={postOps.handleEditPost}
-                onSchedulePost={postOps.handleSchedulePost}
-                onUnschedulePost={postOps.handleUnschedulePost}
-                onDeletePost={postOps.handleDeletePost}
-                onGeneratePosts={handleGeneratePostsFromGrid}
-              />
+              {/* Sidebar with mobile overlay */}
+              <div
+                className={`
+                fixed inset-0 z-50 lg:relative lg:inset-auto lg:z-auto
+                ${isSidebarOpen ? "block" : "hidden lg:block"}
+                lg:w-72 lg:flex-shrink-0
+              `}
+              >
+                {/* Mobile backdrop */}
+                <div
+                  className={`absolute inset-0 bg-opacity-50 lg:hidden ${
+                    isSidebarOpen ? "block" : "hidden"
+                  }`}
+                  onClick={() => setIsSidebarOpen(false)}
+                />
+
+                {/* Sidebar content */}
+                <div className="relative lg:relative">
+                  <FolderSidebar
+                    folders={folders}
+                    selectedFolderId={selectedFolderId}
+                    unorganizedPostsCount={postOps.getUnorganizedPosts().length}
+                    isOpen={isSidebarOpen}
+                    onSelectFolder={(folderId) => {
+                      handleSelectFolder(folderId);
+                      // Close sidebar on mobile after selection
+                      if (window.innerWidth < 1024) {
+                        setIsSidebarOpen(false);
+                      }
+                    }}
+                    onEditFolder={handleEditFolder}
+                    onDeleteFolder={handleDeleteFolderRequest}
+                    onDropPost={postOps.handleDropPostInFolder}
+                    getPostsInFolderCount={(folderId) =>
+                      postOps.getPostsInFolder(folderId).length
+                    }
+                    onClose={() => setIsSidebarOpen(false)}
+                  />
+                </div>
+              </div>
+
+              {/* Main content area */}
+              <div className="flex-1 min-w-0">
+                <PostsGrid
+                  posts={postOps.getDisplayedPosts(selectedFolderId)}
+                  folders={folders}
+                  selectedFolderId={selectedFolderId}
+                  onMovePost={postOps.handleMovePost}
+                  onEditPost={postOps.handleEditPost}
+                  onSchedulePost={postOps.handleSchedulePost}
+                  onUnschedulePost={postOps.handleUnschedulePost}
+                  onDeletePost={postOps.handleDeletePost}
+                  onGeneratePosts={handleGeneratePostsFromGrid}
+                />
+              </div>
             </div>
           )}
 

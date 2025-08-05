@@ -200,7 +200,7 @@ export default function ScheduleCalendar({
     return (
       <div
         ref={drop as unknown as React.Ref<HTMLDivElement>}
-        className={`p-2 h-16 flex flex-col items-center justify-center relative cursor-pointer transition-all duration-200 ${
+        className={`p-1 sm:p-2 h-12 sm:h-16 flex flex-col items-center justify-center relative cursor-pointer transition-all duration-200 ${
           isCurrentMonth ? "text-gray-900" : "text-gray-300"
         } ${
           hasPost ? "bg-blue-100 text-blue-900 rounded-lg font-medium" : ""
@@ -214,13 +214,14 @@ export default function ScheduleCalendar({
         onMouseEnter={(e) => handleMouseEnter(date, e)}
         onMouseLeave={handleMouseLeave}
       >
-        <span className="text-sm">{day}</span>
+        <span className="text-xs sm:text-sm">{day}</span>
         {hasPost && !isCurrentDay() && (
-          <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-500 rounded-full"></div>
+          <div className="absolute bottom-0.5 sm:bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-500 rounded-full"></div>
         )}
         {isOver && canDrop && (
           <div className="absolute inset-0 flex items-center justify-center text-xs text-green-700 font-medium">
-            Drop here
+            <span className="hidden sm:inline">Drop here</span>
+            <span className="sm:hidden">Drop</span>
           </div>
         )}
       </div>
@@ -256,12 +257,12 @@ export default function ScheduleCalendar({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
       {/* Upcoming Scheduled Posts */}
       <Card className="relative">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="w-5 h-5" />
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
             Upcoming Posts
           </CardTitle>
         </CardHeader>
@@ -271,53 +272,53 @@ export default function ScheduleCalendar({
               <div className="space-y-4 flex-1">
                 {getUpcomingPosts().map((post) => (
                   <DraggablePost key={post.id} post={post}>
-                    <div className="border rounded-lg p-3 space-y-2 hover:shadow-md transition-shadow">
-                      <div className="flex items-center justify-between">
+                    <div className="border rounded-lg p-2 sm:p-3 space-y-2 hover:shadow-md transition-shadow">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
                         <div className="flex items-center gap-2">
-                          <GripVertical className="w-4 h-4 text-gray-400" />
-                          <Badge variant="outline">
+                          <GripVertical className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
+                          <Badge variant="outline" className="text-xs">
                             {post.platform || "All Platforms"}
                           </Badge>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <div className="flex items-center gap-1 text-sm text-gray-500">
+                        <div className="flex items-center gap-1 sm:gap-2">
+                          <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-500">
                             <Clock className="w-3 h-3" />
-                            {new Date(
-                              post.scheduledAt!
-                            ).toLocaleDateString()}{" "}
-                            at{" "}
-                            {formatTimeForDisplay(new Date(post.scheduledAt!))}
+                            <span className="hidden sm:inline">
+                              {new Date(post.scheduledAt!).toLocaleDateString()}{" "}
+                              at{" "}
+                              {formatTimeForDisplay(
+                                new Date(post.scheduledAt!)
+                              )}
+                            </span>
+                            <span className="sm:hidden">
+                              {new Date(post.scheduledAt!).toLocaleDateString()}
+                            </span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setEditingPostContent(post);
-                              }}
-                              className="h-6 w-6 p-0 hover:bg-gray-100"
-                              title="Edit content"
-                            >
-                              <Settings className="w-3 h-3" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
+                            <Settings
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setEditingPost(post);
                               }}
-                              className="h-6 w-6 p-0 hover:bg-gray-100"
-                              title="Edit schedule"
-                            >
-                              <Edit className="w-3 h-3" />
-                            </Button>
+                              className="w-4 h-4 !cursor-pointer"
+                            />
+
+                            <Edit
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setEditingPostContent(post);
+                              }}
+                              className="w-4 h-4 !cursor-pointer"
+                            />
                           </div>
                         </div>
                       </div>
-                      <p className="text-sm line-clamp-2">{post.caption}</p>
-                      <p className="text-xs text-blue-600">{post.hashtags}</p>
+                      <p className="text-xs sm:text-sm line-clamp-2">
+                        {post.caption}
+                      </p>
+                      <p className="text-xs text-blue-600 line-clamp-1">
+                        {post.hashtags}
+                      </p>
                     </div>
                   </DraggablePost>
                 ))}
@@ -341,8 +342,8 @@ export default function ScheduleCalendar({
       {/* Draft Posts Ready to Schedule */}
       <Card className="relative">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="w-5 h-5" />
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
             Ready to Schedule
           </CardTitle>
         </CardHeader>
@@ -352,47 +353,42 @@ export default function ScheduleCalendar({
               <div className="space-y-4 flex-1">
                 {draftPosts.slice(0, 5).map((post) => (
                   <DraggablePost key={post.id} post={post}>
-                    <div className="border rounded-lg p-3 space-y-2 hover:shadow-md transition-shadow">
-                      <div className="flex items-center justify-between">
+                    <div className="border rounded-lg p-2 sm:p-3 space-y-2 hover:shadow-md transition-shadow">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
                         <div className="flex items-center gap-2">
-                          <GripVertical className="w-4 h-4 text-gray-400" />
-                          <Badge>Draft</Badge>
+                          <GripVertical className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
+                          <Badge className="text-xs">Draft</Badge>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1 sm:gap-2">
                           <div className="text-xs text-gray-500">
-                            Created{" "}
+                            <span className="hidden sm:inline">Created </span>
                             {new Date(post.createdAt).toLocaleDateString()}
                           </div>
                           <div className="flex items-center gap-1">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setEditingPostContent(post);
-                              }}
-                              className="h-6 w-6 p-0 hover:bg-gray-100"
-                              title="Edit content"
-                            >
-                              <Settings className="w-3 h-3" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
+                            <Settings
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setEditingPost(post);
                               }}
-                              className="h-6 w-6 p-0 hover:bg-gray-100"
-                              title="Schedule post"
-                            >
-                              <Edit className="w-3 h-3" />
-                            </Button>
+                              className="w-4 h-4 !cursor-pointer"
+                            />
+
+                            <Edit
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setEditingPostContent(post);
+                              }}
+                              className="w-4 h-4 !cursor-pointer"
+                            />
                           </div>
                         </div>
                       </div>
-                      <p className="text-sm line-clamp-2">{post.caption}</p>
-                      <p className="text-xs text-blue-600">{post.hashtags}</p>
+                      <p className="text-xs sm:text-sm line-clamp-2">
+                        {post.caption}
+                      </p>
+                      <p className="text-xs text-blue-600 line-clamp-1">
+                        {post.hashtags}
+                      </p>
                     </div>
                   </DraggablePost>
                 ))}
@@ -412,82 +408,90 @@ export default function ScheduleCalendar({
       </Card>
 
       {/* Calendar View - Interactive Month View */}
-      <Card className="lg:col-span-2">
+      <Card className="xl:col-span-2">
         <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span>Calendar View</span>
-            <div className="flex items-center gap-3">
-              {/* Previous Month Button */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleNavigateMonth("prev")}
-                className="h-8 w-8 p-0"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </Button>
+          <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <span className="text-lg font-semibold">Calendar View</span>
 
-              {/* Month Dropdown */}
-              <Select
-                value={currentDate.getMonth().toString()}
-                onValueChange={handleMonthChange}
-              >
-                <SelectTrigger className="w-20 h-8 text-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {getMonthNames().map((month, index) => (
-                    <SelectItem key={index} value={index.toString()}>
-                      {month}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            {/* Mobile-first navigation */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              {/* Month/Year Row */}
+              <div className="flex items-center justify-center gap-2">
+                {/* Previous Month Button */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleNavigateMonth("prev")}
+                  className="h-8 w-8 p-0 flex-shrink-0"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
 
-              {/* Year Dropdown */}
-              <Select
-                value={currentDate.getFullYear().toString()}
-                onValueChange={handleYearChange}
-              >
-                <SelectTrigger className="w-24 h-8 text-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {getYearRange(currentDate.getFullYear()).map((year) => (
-                    <SelectItem key={year} value={year.toString()}>
-                      {year}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                {/* Month Dropdown */}
+                <Select
+                  value={currentDate.getMonth().toString()}
+                  onValueChange={handleMonthChange}
+                >
+                  <SelectTrigger className="w-20 h-8 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {getMonthNames().map((month, index) => (
+                      <SelectItem key={index} value={index.toString()}>
+                        {month}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-              {/* Today Button */}
+                {/* Year Dropdown */}
+                <Select
+                  value={currentDate.getFullYear().toString()}
+                  onValueChange={handleYearChange}
+                >
+                  <SelectTrigger className="w-22 h-8 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {getYearRange(currentDate.getFullYear()).map((year) => (
+                      <SelectItem key={year} value={year.toString()}>
+                        {year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* Next Month Button */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleNavigateMonth("next")}
+                  className="h-8 w-8 p-0 flex-shrink-0"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+
+              {/* Today Button - Full width on mobile, inline on desktop */}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleGoToToday}
-                className="text-sm font-medium h-8 px-3"
+                className="text-sm font-medium h-8 px-4 w-full sm:w-auto"
               >
                 Today
-              </Button>
-
-              {/* Next Month Button */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleNavigateMonth("next")}
-                className="h-8 w-8 p-0"
-              >
-                <ChevronRight className="w-4 h-4" />
               </Button>
             </div>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-7 gap-2 text-center text-sm">
+          <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center text-sm">
             {/* Calendar Header */}
             {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-              <div key={day} className="font-medium text-gray-500 p-2">
+              <div
+                key={day}
+                className="font-medium text-gray-500 p-1 sm:p-2 text-xs sm:text-sm"
+              >
                 {day}
               </div>
             ))}

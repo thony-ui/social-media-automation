@@ -27,7 +27,7 @@ export const useDeletePost = () => {
     onSuccess: () => {
       // Invalidate posts queries to refetch data
       queryClient.invalidateQueries({ queryKey: ["posts"] });
-      
+
       // Also invalidate folders in case post counts changed
       queryClient.invalidateQueries({ queryKey: ["folders"] });
     },

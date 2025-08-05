@@ -55,19 +55,29 @@ export default function DashboardNavigation({
               }`}
               onClick={() => onViewChange(item.id)}
             >
-              <div className="px-3 py-2">
+              <div className="px-2 py-[12px]">
                 <div className="flex items-center gap-2">
                   <div className={`p-1 rounded bg-gradient-to-r ${item.color}`}>
                     <Icon className="w-3 h-3 text-white" />
                   </div>
                   <span
-                    className={`text-xs font-medium whitespace-nowrap ${
+                    className={`text-xs font-medium whitespace-nowrap hidden sm:inline ${
                       isSelected
                         ? "text-blue-700 dark:text-blue-300"
                         : "text-gray-900 dark:text-white"
                     }`}
                   >
                     {item.label}
+                  </span>
+                  {/* Mobile: show shorter labels */}
+                  <span
+                    className={`text-xs font-medium whitespace-nowrap sm:hidden ${
+                      isSelected
+                        ? "text-blue-700 dark:text-blue-300"
+                        : "text-gray-900 dark:text-white"
+                    }`}
+                  >
+                    {item.id === "posts" ? "Posts" : "Schedule"}
                   </span>
                   {isSelected && (
                     <div
@@ -86,10 +96,10 @@ export default function DashboardNavigation({
         variant="ghost"
         size="sm"
         onClick={handleLogout}
-        className="flex items-center gap-2 text-gray-600 cursor-pointer hover:bg-transparent"
+        className="flex items-center gap-1 sm:gap-2 text-gray-600 cursor-pointer hover:bg-transparent px-2 sm:px-4"
       >
         <LogOut className="w-4 h-4" />
-        <span className="text-sm">Logout</span>
+        <span className="text-xs sm:text-sm hidden sm:inline">Logout</span>
       </Button>
     </div>
   );

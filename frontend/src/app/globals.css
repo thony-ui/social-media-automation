@@ -36,6 +36,24 @@
   display: none; /* Safari and Chrome */
 }
 
+/* Touch-friendly interactions for mobile */
+@media (max-width: 768px) {
+  button,
+  .cursor-pointer {
+    min-height: 44px; /* Apple's recommended touch target size */
+    min-width: 44px;
+  }
+
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+}
+
+/* Smooth transitions for mobile interactions */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
