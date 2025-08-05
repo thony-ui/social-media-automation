@@ -1,5 +1,6 @@
 import supabase from "../../../lib/supabase-client";
 import logger from "../../../logger";
+import { generateSocialMediaPrompt } from "../../../utils/social-media-prompt";
 import {
   IPostService,
   IPost,
@@ -226,24 +227,72 @@ export class PostRepository implements IPostService {
     return this.mapDbPostToInterface(data);
   };
 
-  generateContent = async (
-    data: IGenerateContentRequest
-  ): Promise<{ caption: string; hashtags?: string }> => {
-    // This would integrate with OpenAI API
-    // For now, return mock data
+  generateContent = async (data: IGenerateContentRequest): Promise<void> => {
+    logger.info(`PostRepository: generateContent called with prompt: ${data}`);
+    const prompt = generateSocialMediaPrompt(data);
+    const response = await fetch(process.env.OPENROUTER_URL!, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.OPENROUTER_API_KEY!}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "deepseek/deepseek-r1-0528-qwen3-8b:free",
+        messages: [{ role: "user", content: prompt }],
+      }),
+    });
+    // get the api using openRouter
+    const aiResponse = await response.json();
+    // convert json to object
+    if (!aiResponse || !aiResponse.choices || aiResponse.choices.length === 0) {
+      logger.error("PostRepository: generateContent failed to get AI response");
+      throw new Error("Failed to generate content");
+    }
+    const jsonContent = aiResponse.choices[0].message.content as any;
+    logger.info(`PostRepository: generateContent success: ${jsonContent}`);
+
+    // Parse JSON if it's a string
+    let parsedContent;
+    try {
+      parsedContent =
+        typeof jsonContent === "string" ? JSON.parse(jsonContent) : jsonContent;
+    } catch (parseError) {
+      logger.error(
+        `PostRepository: generateContent JSON parse error: ${parseError}`
+      );
+      throw new Error("Failed to parse AI response JSON");
+    }
+
+    // Prepare batch insert data
+    const insertData = parsedContent.map((content: any) => ({
+      userId: data.userId,
+      caption: content.caption,
+      hashtags: content.hashtags,
+      platform: content.platform || "all",
+      folderId: content.folderId || null,
+      imagePrompt: content.imagePrompt,
+      status: content.scheduledAt ? "scheduled" : "draft",
+      scheduledAt: content.scheduledAt || null,
+      created_at: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }));
+
+    // Batch insert all posts at once
+    const { data: insertedData, error } = await supabase
+      .from("posts")
+      .insert(insertData)
+      .select();
+
+    if (error) {
+      logger.error(
+        `PostRepository: generateContent batch insert error: ${error.message}`
+      );
+      throw new Error(`Error generating content: ${error.message}`);
+    }
+
     logger.info(
-      `PostRepository: generateContent called with prompt: ${data.prompt}`
+      `PostRepository: generateContent success: ${insertedData?.length} posts created`
     );
-
-    // Mock AI generation - replace with actual OpenAI integration
-    const mockContent = {
-      caption: `Generated content based on: "${data.prompt}". This is a placeholder for AI-generated content that would be created using OpenAI's API.`,
-      hashtags: data.includeHashtags
-        ? "#contentcreation #socialmedia #ai #marketing"
-        : undefined,
-    };
-
-    return mockContent;
   };
 
   private mapDbPostToInterface = (dbPost: any): IPost => {

@@ -20,6 +20,7 @@ interface DroppableFolderButtonProps {
   onEdit: () => void;
   onDelete: () => void;
   onDropPost: (postId: string, folderId: string) => void;
+  folderColor?: string; // Optional prop for folder color
 }
 
 export default function DroppableFolderButton({
@@ -31,6 +32,7 @@ export default function DroppableFolderButton({
   onEdit,
   onDelete,
   onDropPost,
+  folderColor = "default", // Optional prop for folder color
 }: DroppableFolderButtonProps) {
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: "post",
@@ -60,7 +62,10 @@ export default function DroppableFolderButton({
           className="flex-1 justify-start min-w-0 cursor-pointer"
           onClick={onSelect}
         >
-          <FolderPlus className="w-4 h-4 mr-2 flex-shrink-0" />
+          <FolderPlus
+            className="w-4 h-4 mr-2 flex-shrink-0"
+            style={{ color: folderColor }}
+          />
           <span className="truncate">
             {folderName} ({postCount})
           </span>

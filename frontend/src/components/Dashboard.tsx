@@ -291,14 +291,6 @@ export default function Dashboard() {
           <PostGenerationForm
             open={isGenerateFormOpen}
             onOpenChange={setIsGenerateFormOpen}
-            onPostsGenerated={(newPosts) => {
-              // Posts will be automatically refetched by React Query
-              // after the mutation completes
-              setIsGenerateFormOpen(false);
-              showToast(`Generated ${newPosts.length} posts successfully!`, {
-                success: true,
-              });
-            }}
           />
 
           <CreatePostModal

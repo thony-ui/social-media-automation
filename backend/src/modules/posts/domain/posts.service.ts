@@ -188,9 +188,7 @@ export class PostService implements IPostService {
     }
   };
 
-  generateContent = async (
-    data: IGenerateContentRequest
-  ): Promise<{ caption: string; hashtags?: string }> => {
+  generateContent = async (data: IGenerateContentRequest): Promise<void> => {
     // Note: userId should be passed from controller based on auth
     const userId = (data as any).userId;
     if (!userId) {
@@ -198,20 +196,9 @@ export class PostService implements IPostService {
     }
 
     try {
-      // Validate input
-      if (!data.prompt || data.prompt.trim().length === 0) {
-        throw new Error("Prompt is required for content generation");
-      }
-
-      if (data.prompt.length > 500) {
-        throw new Error("Prompt must be less than 500 characters");
-      }
-
       // Generate content using AI
       const content = await this.postRepository.generateContent(data);
-
       logger.info(`PostService: generateContent success for user ${userId}`);
-      return content;
     } catch (error: any) {
       logger.error(`PostService: generateContent error: ${error.message}`);
       throw new Error(`Failed to generate content: ${error.message}`);

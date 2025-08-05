@@ -1,25 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Sparkles, Loader2 } from "lucide-react";
 import { Post } from "@/types";
-
+import { useCreatePostWithAi } from "@/hooks/mutations/useCreatePostWithAi";
+import { showToast } from "@/utils/toast-helper";
 
 interface PostGenerationFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onPostsGenerated: (posts: Post[]) => void;
 }
 
 export default function PostGenerationForm({
   open,
   onOpenChange,
-  onPostsGenerated,
 }: PostGenerationFormProps) {
   const [formData, setFormData] = useState({
     brandName: "",
@@ -28,26 +33,18 @@ export default function PostGenerationForm({
     numberOfPosts: 10,
   });
   const [isGenerating, setIsGenerating] = useState(false);
+  const createPostWithAi = useCreatePostWithAi();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsGenerating(true);
 
     try {
-      // Simulate API call with mock data
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await createPostWithAi.mutateAsync(formData);
+      showToast(`Generated ${formData.numberOfPosts} posts successfully!`, {
+        success: true,
+      });
 
-      const mockPosts: Post[] = Array.from({ length: formData.numberOfPosts }, (_, i) => ({
-        id: Date.now().toString() + i,
-        caption: `🚀 Amazing ${formData.brandName} content for ${formData.targetAudience}! Post ${i + 1} showcasing our incredible ${formData.productDescription}. Join thousands of satisfied customers! #Innovation #Quality #Success`,
-        hashtags: `#${formData.brandName.replace(/\s+/g, '')} #Innovation #Quality #Success #ContentMarketing`,
-        imagePrompt: `Professional product showcase for ${formData.brandName}, modern design, vibrant colors`,
-        status: "draft",
-        createdAt: new Date().toISOString(),
-      }));
-
-      onPostsGenerated(mockPosts);
-      
       setFormData({
         brandName: "",
         productDescription: "",
@@ -79,31 +76,39 @@ export default function PostGenerationForm({
             <Input
               id="brandName"
               value={formData.brandName}
-              onChange={(e) => setFormData({ ...formData, brandName: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, brandName: e.target.value })
+              }
               placeholder="Your Brand Name"
               required
               disabled={isGenerating}
             />
           </div>
-          
+
           <div className="space-y-2">
-            <Label htmlFor="productDescription">Product/Service Description</Label>
+            <Label htmlFor="productDescription">
+              Product/Service Description
+            </Label>
             <Textarea
               id="productDescription"
               value={formData.productDescription}
-              onChange={(e) => setFormData({ ...formData, productDescription: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, productDescription: e.target.value })
+              }
               placeholder="Describe what you're promoting..."
               required
               disabled={isGenerating}
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="targetAudience">Target Audience</Label>
             <Input
               id="targetAudience"
               value={formData.targetAudience}
-              onChange={(e) => setFormData({ ...formData, targetAudience: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, targetAudience: e.target.value })
+              }
               placeholder="Small business owners, age 25-45"
               required
               disabled={isGenerating}
@@ -116,13 +121,18 @@ export default function PostGenerationForm({
               id="numberOfPosts"
               type="number"
               min="1"
-              max="30"
+              max="10"
               value={formData.numberOfPosts}
-              onChange={(e) => setFormData({ ...formData, numberOfPosts: parseInt(e.target.value) || 10 })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  numberOfPosts: parseInt(e.target.value) || 10,
+                })
+              }
               disabled={isGenerating}
             />
           </div>
-          
+
           <div className="flex gap-2 pt-4">
             <Button
               type="button"

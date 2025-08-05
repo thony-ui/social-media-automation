@@ -272,13 +272,13 @@ export class PostController {
         userId,
       };
 
-      const content = await this.postService.generateContent(generateData);
+      await this.postService.generateContent(generateData);
 
       logger.info(`PostController: generateContent success for user ${userId}`);
-      res.status(200).json({
+      res.status(201).json({
         success: true,
         message: "Content generated successfully",
-        data: content,
+        data: null,
       });
     } catch (error: any) {
       logger.error(`PostController: generateContent error: ${error.message}`);

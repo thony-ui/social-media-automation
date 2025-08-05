@@ -114,6 +114,7 @@ export default function FolderSidebar({
                 key={folder.id}
                 folderId={folder.id}
                 folderName={folder.name}
+                folderColor={folder.color}
                 postCount={getPostsInFolderCount(folder.id)}
                 isSelected={selectedFolderId === folder.id}
                 onSelect={() => onSelectFolder(folder.id)}

@@ -35,11 +35,11 @@ export interface IUpdatePostRequest {
 }
 
 export interface IGenerateContentRequest {
-  prompt: string;
-  platform?: string;
-  tone?: "professional" | "casual" | "friendly" | "formal" | "creative";
-  includeHashtags?: boolean;
-  maxLength?: number;
+  brandName: string;
+  productDescription: string;
+  targetAudience: string;
+  numberOfPosts: number;
+  userId: string;
 }
 
 export interface IPostService {
@@ -59,7 +59,5 @@ export interface IPostService {
     folderId: string,
     userId: string
   ) => Promise<IPost>;
-  generateContent: (
-    data: IGenerateContentRequest
-  ) => Promise<{ caption: string; hashtags?: string }>;
+  generateContent: (data: IGenerateContentRequest) => Promise<void>;
 }

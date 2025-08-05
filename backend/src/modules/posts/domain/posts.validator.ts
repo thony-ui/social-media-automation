@@ -32,15 +32,13 @@ export const updatePostValidator = z.object({
 });
 
 export const generateContentValidator = z.object({
-  prompt: z.string().min(1, "Prompt is required").max(500, "Prompt too long"),
-  platform: z
-    .enum(["all", "instagram", "twitter", "facebook", "linkedin"])
-    .default("all"),
-  tone: z
-    .enum(["professional", "casual", "friendly", "formal", "creative"])
-    .default("professional"),
-  includeHashtags: z.boolean().default(true),
-  maxLength: z.number().min(50).max(2200).default(280),
+  brandName: z.string(),
+  productDescription: z.string(),
+  targetAudience: z.string(),
+  numberOfPosts: z
+    .number()
+    .min(1, "At least one post is required")
+    .max(10, "Too many posts requested"),
 });
 
 // Type exports
