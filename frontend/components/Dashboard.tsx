@@ -193,7 +193,7 @@ export default function Dashboard() {
 
           {/* Main Content */}
           {selectedView === "posts" && (
-            <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
+            <div className="flex flex-col lg:flex-row lg:h-screen lg:overflow-hidden gap-4 lg:gap-6">
               {/* Mobile Folder Toggle */}
               <div className="lg:hidden sticky">
                 <Button
@@ -223,7 +223,7 @@ export default function Dashboard() {
                 />
 
                 {/* Sidebar content */}
-                <div className="relative lg:relative">
+                <div className="flex min-h-screen">
                   <FolderSidebar
                     folders={folders}
                     selectedFolderId={selectedFolderId}
@@ -248,7 +248,7 @@ export default function Dashboard() {
               </div>
 
               {/* Main content area */}
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-0 overflow-y-auto scrollbar-none">
                 <PostsGrid
                   posts={postOps.getDisplayedPosts(selectedFolderId)}
                   folders={folders}
