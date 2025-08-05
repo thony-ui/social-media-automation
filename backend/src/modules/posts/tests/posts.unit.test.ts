@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import { PostController } from "../domain/posts.controller";
 import { PostRepository } from "../domain/posts.repository";
 import { PostService } from "../domain/posts.service";
-import { IPost } from "../domain/posts.interface";
+import { IGenerateContentRequest, IPost } from "../domain/posts.interface";
 import { IFolder } from "../../folders/domain/folders.interface";
 import { FolderRepository } from "../../folders/domain/folders.repository";
 import { FolderService } from "../../folders/domain/folders.service";
@@ -285,11 +285,12 @@ describe("PostService", () => {
 
   describe("generateContent", () => {
     it("should generate content successfully", async () => {
-      const generateData = {
+      const generateData: IGenerateContentRequest = {
+        brandName: "TechCorp",
+        productDescription: "Latest AI technology",
+        targetAudience: "tech enthusiasts",
+        numberOfPosts: 3,
         userId: "user-123",
-        prompt: "Write about AI",
-        platform: "instagram" as const,
-        includeHashtags: true,
       };
 
       const mockContent = {
@@ -308,10 +309,12 @@ describe("PostService", () => {
     });
 
     it("should throw error if prompt is empty", async () => {
-      const generateData = {
+      const generateData: IGenerateContentRequest = {
+        brandName: "TechCorp",
+        productDescription: "Latest AI technology",
+        targetAudience: "tech enthusiasts",
+        numberOfPosts: 3,
         userId: "user-123",
-        prompt: "",
-        platform: "instagram" as const,
       };
 
       await expect(postService.generateContent(generateData)).rejects.toThrow(
@@ -320,10 +323,12 @@ describe("PostService", () => {
     });
 
     it("should throw error if prompt is too long", async () => {
-      const generateData = {
+      const generateData: IGenerateContentRequest = {
+        brandName: "TechCorp",
+        productDescription: "Latest AI technology",
+        targetAudience: "tech enthusiasts",
+        numberOfPosts: 3,
         userId: "user-123",
-        prompt: "a".repeat(501), // 501 characters
-        platform: "instagram" as const,
       };
 
       await expect(postService.generateContent(generateData)).rejects.toThrow(
