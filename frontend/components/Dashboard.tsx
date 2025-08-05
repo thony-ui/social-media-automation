@@ -107,19 +107,9 @@ export default function Dashboard() {
   // Handle loading state
   if (isLoadingPosts || isLoadingFolders) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-        <DashboardNavigation
-          selectedView={selectedView}
-          onViewChange={setSelectedView}
-        />
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600 dark:text-gray-400">
-              Loading dashboard...
-            </p>
-          </div>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-600 dark:text-gray-400">Loading dashboard...</p>
       </div>
     );
   }
@@ -127,24 +117,16 @@ export default function Dashboard() {
   // Handle error state
   if (postsError || foldersError) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-        <DashboardNavigation
-          selectedView={selectedView}
-          onViewChange={setSelectedView}
-        />
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <p className="text-red-600 dark:text-red-400 mb-4">
-              Failed to load dashboard data
-            </p>
-            <button
-              onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Try Again
-            </button>
-          </div>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+        <p className="text-red-600 dark:text-red-400 mb-4">
+          Failed to load dashboard data
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Try Again
+        </button>
       </div>
     );
   }

@@ -10,6 +10,8 @@ Requirements:
 - Create engaging captions (max 2200 characters)
 - Include relevant hashtags (max 280 characters)
 - Generate descriptive image prompts
+- Do NOT use quotation marks (", ') in caption, hashtags, or imagePrompt content
+- Use alternative punctuation or rephrase to avoid quotes
 - Return ONLY valid JSON array, no additional text
 
 Required JSON format:
