@@ -259,7 +259,7 @@ export default function ScheduleCalendar({
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
       {/* Upcoming Scheduled Posts */}
-      <Card className="relative">
+      <Card className="relative h-[500px] overflow-y-auto scrollbar-none">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
             <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -340,7 +340,7 @@ export default function ScheduleCalendar({
       </Card>
 
       {/* Draft Posts Ready to Schedule */}
-      <Card className="relative">
+      <Card className="relative h-[500px] overflow-y-auto scrollbar-none">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
             <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
