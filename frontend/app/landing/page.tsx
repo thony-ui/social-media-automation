@@ -48,10 +48,10 @@ export default function LandingPage() {
 
           <div className="flex items-center gap-4">
             <Button
-              onClick={() => setShowSignUp(true)}
+              onClick={() => setShowSignIn(true)}
               className="cursor-pointer bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg"
             >
-              Get Started
+              Login
             </Button>
           </div>
         </div>
