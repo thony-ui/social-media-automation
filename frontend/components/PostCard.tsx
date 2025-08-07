@@ -200,7 +200,7 @@ export default function PostCard({
             </div>
 
             {/* Generate Image Button */}
-            {post.imagePrompt && !post.imageUrl && (
+            {/* {post.imagePrompt && !post.imageUrl && (
               <Button
                 variant="outline"
                 size="sm"
@@ -209,7 +209,7 @@ export default function PostCard({
                 <ImageIcon className="w-3 h-3 mr-1" />
                 Generate Image
               </Button>
-            )}
+            )} */}
           </div>
         </CardContent>
       </Card>

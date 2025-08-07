@@ -138,12 +138,16 @@ export default function PostGenerationForm({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="flex-1"
+              className="flex-1 cursor-pointer"
               disabled={isGenerating}
             >
               Cancel
             </Button>
-            <Button type="submit" className="flex-1" disabled={isGenerating}>
+            <Button
+              type="submit"
+              className="flex-1 cursor-pointer"
+              disabled={isGenerating}
+            >
               {isGenerating ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
