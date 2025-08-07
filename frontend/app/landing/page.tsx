@@ -84,14 +84,6 @@ export default function LandingPage() {
                 Start Creating Free
                 <ChevronRight className="w-5 h-5 ml-2" />
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="cursor-pointer border-2 border-gray-300 hover:border-gray-400 text-lg px-8 py-4"
-              >
-                <Play className="w-5 h-5 mr-2" />
-                Watch Demo
-              </Button>
             </div>
           </div>
 
@@ -151,28 +143,6 @@ export default function LandingPage() {
           </div>
 
           {/* Social Proof */}
-          <div className="mt-24 text-center">
-            <p className="text-gray-500 dark:text-gray-400 mb-8">
-              Trusted by content creators worldwide
-            </p>
-            <div className="flex items-center justify-center gap-8 opacity-60">
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5" />
-                <span className="font-semibold">10,000+</span>
-                <span>Creators</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5" />
-                <span className="font-semibold">1M+</span>
-                <span>Posts Generated</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5" />
-                <span className="font-semibold">50k+</span>
-                <span>Posts Scheduled</span>
-              </div>
-            </div>
-          </div>
         </div>
       </main>
 

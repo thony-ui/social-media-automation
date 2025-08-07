@@ -223,7 +223,7 @@ export default function Dashboard() {
                 />
 
                 {/* Sidebar content */}
-                <div className="flex min-h-screen">
+                <div className="relative min-h-screen">
                   <FolderSidebar
                     folders={folders}
                     selectedFolderId={selectedFolderId}
@@ -231,10 +231,7 @@ export default function Dashboard() {
                     isOpen={isSidebarOpen}
                     onSelectFolder={(folderId) => {
                       handleSelectFolder(folderId);
-                      // Close sidebar on mobile after selection
-                      if (window.innerWidth < 1024) {
-                        setIsSidebarOpen(false);
-                      }
+                      setIsSidebarOpen(false);
                     }}
                     onEditFolder={handleEditFolder}
                     onDeleteFolder={handleDeleteFolderRequest}
