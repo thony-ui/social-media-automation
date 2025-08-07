@@ -8,12 +8,14 @@ interface DashboardActionsProps {
   onGeneratePosts: () => void;
   onCreatePost: () => void;
   onCreateFolder: () => void;
+  onExport: () => void;
 }
 
 export default function DashboardActions({
   onGeneratePosts,
   onCreatePost,
   onCreateFolder,
+  onExport,
 }: DashboardActionsProps) {
   return (
     <Card className="p-4 sm:p-6 mb-4 sm:mb-6 bg-gradient-to-r from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 border-dashed">
@@ -53,6 +55,7 @@ export default function DashboardActions({
           </Button>
 
           <Button
+            onClick={onExport}
             variant="outline"
             className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 cursor-pointer flex-1 sm:flex-none justify-center"
           >

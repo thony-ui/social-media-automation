@@ -149,7 +149,7 @@ export default function CreateFolderModal({
                   onClick={() =>
                     setFormData((prev) => ({ ...prev, color: color.value }))
                   }
-                  className={`w-8 h-8 rounded-full border-2 transition-all hover:scale-110 ${
+                  className={`cursor-pointer w-8 h-8 rounded-full border-2 transition-all hover:scale-110 ${
                     formData.color === color.value
                       ? "border-gray-900 ring-2 ring-gray-300"
                       : "border-gray-200"

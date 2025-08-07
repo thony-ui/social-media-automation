@@ -19,6 +19,7 @@ import PostGenerationForm from "./PostGenerationForm";
 import CreatePostModal from "./CreatePostModal";
 import CreateFolderModal from "./CreateFolderModal";
 import ScheduleCalendar from "./ScheduleCalendar";
+import ExportModal from "./ExportModal";
 import { showToast } from "../utils/toast-helper";
 import { useFolderOperationsWithMutations } from "../hooks/useFolderOperationsWithMutation";
 
@@ -27,6 +28,7 @@ export default function Dashboard() {
   const [isGenerateFormOpen, setIsGenerateFormOpen] = useState(false);
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
   const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [selectedView, setSelectedView] = useState<ViewType>("posts");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
@@ -90,6 +92,10 @@ export default function Dashboard() {
 
   const handleCreateFolder = () => {
     setIsCreateFolderModalOpen(true);
+  };
+
+  const handleExport = () => {
+    setIsExportModalOpen(true);
   };
 
   const handleDeleteFolderRequest = (folderId: string, folderName: string) => {
@@ -194,6 +200,7 @@ export default function Dashboard() {
             onGeneratePosts={() => setIsGenerateFormOpen(true)}
             onCreatePost={handleCreatePost}
             onCreateFolder={handleCreateFolder}
+            onExport={handleExport}
           />
 
           {/* Main Content */}
@@ -285,6 +292,13 @@ export default function Dashboard() {
           <CreateFolderModal
             open={isCreateFolderModalOpen}
             onOpenChange={setIsCreateFolderModalOpen}
+          />
+
+          <ExportModal
+            open={isExportModalOpen}
+            onOpenChange={setIsExportModalOpen}
+            folders={folders}
+            posts={posts}
           />
 
           <FolderEditModal
