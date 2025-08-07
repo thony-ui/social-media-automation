@@ -101,7 +101,12 @@ export default function Dashboard() {
     if (deletingFolder) {
       folderOps.handleDeleteFolder(deletingFolder.id);
       setDeletingFolder(null);
+      showToast("Folder deleted successfully", {
+        success: true,
+      });
+      return;
     }
+    showToast("Error deleting folder");
   };
 
   // Handle loading state
