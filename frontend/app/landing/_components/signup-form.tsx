@@ -6,10 +6,11 @@ import { useState } from "react";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
-import { Alert, AlertDescription } from "../../../components/ui/alert";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/navigation";
 import { signUpAction } from "../actions/signup";
+import { showToast } from "@/utils/toast-helper";
+import { createClient } from "@/lib/supabase/supabase-client";
+import SignInWithGoogleButton from "./SignInWithGoogle";
 
 interface IFormData {
   email: string;
@@ -17,9 +18,7 @@ interface IFormData {
   name: string;
 }
 export function SignUpForm() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<IFormData>({
     email: "",
@@ -35,27 +34,45 @@ export function SignUpForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setIsLoading(true);
 
     try {
+      // need to show toast first
+      showToast(
+        "Sign up successful! Please check your email to confirm your account",
+        {
+          success: true,
+        }
+      );
       await signUpAction(formData.email, formData.password, formData.name);
-      // Handle success (maybe redirect or show success message)
+
+      // This will only run if signUpAction doesn't redirect
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      // Check if this is a Next.js redirect (which is normal behavior)
+      if (
+        err &&
+        typeof err === "object" &&
+        "digest" in err &&
+        typeof err.digest === "string" &&
+        err.digest.includes("NEXT_REDIRECT")
+      ) {
+        return; // Don't treat this as an error
+      }
+
+      // Handle actual errors from the signup action
+      const errorMessage =
+        err instanceof Error ? err.message : "Something went wrong";
+
+      showToast(errorMessage, {
+        success: false,
+      });
     } finally {
+      // Always set loading to false, regardless of success or failure
       setIsLoading(false);
     }
   };
-
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {error && (
-        <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-
       <div className="space-y-2">
         <Label htmlFor="name">Name</Label>
         <Input
@@ -116,8 +133,9 @@ export function SignUpForm() {
         className="w-full cursor-pointer"
         disabled={isLoading}
       >
-        {isLoading ? "Signing in..." : "Sign in"}
+        {isLoading ? "Creating Account..." : "Sign in"}
       </Button>
+      <SignInWithGoogleButton />
     </form>
   );
 }

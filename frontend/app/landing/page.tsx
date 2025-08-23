@@ -162,7 +162,7 @@ export default function LandingPage() {
               Don&apos;t have an account?{" "}
               <Button
                 variant="link"
-                className="p-0 h-auto text-blue-600 hover:text-blue-700"
+                className="p-0 h-auto text-blue-600 hover:text-blue-700 cursor-pointer"
                 onClick={() => {
                   setShowSignIn(false);
                   setShowSignUp(true);
@@ -191,7 +191,7 @@ export default function LandingPage() {
               Already have an account?{" "}
               <Button
                 variant="link"
-                className="p-0 h-auto text-blue-600 hover:text-blue-700"
+                className="p-0 h-auto text-blue-600 hover:text-blue-700 cursor-pointer"
                 onClick={() => {
                   setShowSignUp(false);
                   setShowSignIn(true);

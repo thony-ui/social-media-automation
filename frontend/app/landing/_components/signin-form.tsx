@@ -11,6 +11,7 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signInAction } from "../actions/signin";
+import SignInWithGoogleButton from "./SignInWithGoogle";
 
 export function SignInForm() {
   const router = useRouter();
@@ -109,6 +110,7 @@ export function SignInForm() {
       >
         {isLoading ? "Signing in..." : "Sign in"}
       </Button>
+      <SignInWithGoogleButton />
     </form>
   );
 }

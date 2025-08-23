@@ -2,36 +2,25 @@
 import { redirect } from "next/navigation";
 import { createClient } from "./supabase/supabase-server";
 import axiosInstance from "./axios";
+import { toast } from "sonner";
 
 export async function signUp(email: string, password: string, name: string) {
   const supabase = await createClient();
-  // Find user in demo users
-  const { data, error } = await supabase.auth.signUp({
+
+  await supabase.auth.signUp({
     email,
     password,
+    options: {
+      data: {
+        name: name,
+      },
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+    },
   });
 
-  if (error || !data.user) {
-    return {
-      success: false,
-      error: error?.message || "Failed to sign up",
-    };
-  }
-
-  await axiosInstance.post(
-    `${process.env.NEXT_PUBLIC_API_URL}/v1/users`,
-    {
-      email,
-      name,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${data.session?.access_token}`,
-      },
-    }
-  );
   return {
     success: true,
+    message: "Please check your email to confirm your account",
   };
 }
 
