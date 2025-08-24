@@ -14,7 +14,6 @@ FROM node:22-alpine AS production
 
 WORKDIR /app
 
-# Copy only necessary files for production
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
@@ -22,3 +21,17 @@ COPY --from=builder /app/dist ./dist
 EXPOSE 3000
 
 CMD ["npm", "start"]
+
+# Stage 3: Development image
+FROM node:22-alpine AS development
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]
