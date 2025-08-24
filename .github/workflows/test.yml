@@ -35,18 +35,22 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: backend
 
       - name: Run tests
         run: npm run test
+        working-directory: backend
 
       - name: Set NODE_ENV to production
         run: echo "NODE_ENV=production" >> $GITHUB_ENV
 
       - name: Build and run docker-compose.production.yml
-        run: docker compose -f backend/docker-compose.production.yml up --build -d
+        run: docker compose -f docker-compose.production.yml up --build -d
+        working-directory: backend
 
       - name: Wait for containers to be healthy
         run: sleep 10
 
       - name: Shut down docker compose
-        run: docker compose -f backend/docker-compose.production.yml down
+        run: docker compose -f docker-compose.production.yml down
+        working-directory: backend
