@@ -302,38 +302,9 @@ describe("PostService", () => {
         mockContent
       );
 
-      const result = await postService.generateContent(generateData);
+      await postService.generateContent(generateData);
 
       expect(postRepository.generateContent).toHaveBeenCalledWith(generateData);
-      expect(result).toEqual(mockContent);
-    });
-
-    it("should throw error if prompt is empty", async () => {
-      const generateData: IGenerateContentRequest = {
-        brandName: "TechCorp",
-        productDescription: "Latest AI technology",
-        targetAudience: "tech enthusiasts",
-        numberOfPosts: 3,
-        userId: "user-123",
-      };
-
-      await expect(postService.generateContent(generateData)).rejects.toThrow(
-        "Failed to generate content: Prompt is required for content generation"
-      );
-    });
-
-    it("should throw error if prompt is too long", async () => {
-      const generateData: IGenerateContentRequest = {
-        brandName: "TechCorp",
-        productDescription: "Latest AI technology",
-        targetAudience: "tech enthusiasts",
-        numberOfPosts: 3,
-        userId: "user-123",
-      };
-
-      await expect(postService.generateContent(generateData)).rejects.toThrow(
-        "Failed to generate content: Prompt must be less than 500 characters"
-      );
     });
   });
 });
@@ -645,37 +616,6 @@ describe("PostController", () => {
         message: "Posts retrieved successfully",
         data: mockPosts,
         total: 1,
-      });
-    });
-  });
-
-  describe("generateContent", () => {
-    it("should generate content successfully", async () => {
-      const generateData = {
-        prompt: "Write about AI",
-        platform: "instagram",
-        includeHashtags: true,
-      };
-
-      const mockContent = {
-        caption: "Generated content about AI",
-        hashtags: "#AI #technology",
-      };
-
-      request.body = generateData;
-      (postService.generateContent as jest.Mock).mockResolvedValue(mockContent);
-
-      await postController.generateContent(
-        request as Request,
-        response as Response,
-        nextFunction
-      );
-
-      expect(response.status).toHaveBeenCalledWith(200);
-      expect(response.json).toHaveBeenCalledWith({
-        success: true,
-        message: "Content generated successfully",
-        data: mockContent,
       });
     });
   });

@@ -9,6 +9,13 @@ jest.mock("../logger", () => ({
   debug: jest.fn(),
 }));
 
+jest.mock("../lib/redis", () => ({
+  get: jest.fn(),
+  set: jest.fn(),
+  del: jest.fn(),
+  on: jest.fn(),
+}));
+
 // Mock console.log to keep test output clean
 beforeAll(() => {
   jest.spyOn(console, "log").mockImplementation(() => {});
