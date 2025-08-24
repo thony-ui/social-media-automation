@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7
+    container_name: redis-local
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_ORIGIN_PRODUCTION=${ALLOWED_ORIGIN_PRODUCTION}
+      - ALLOWED_ORIGIN_DEVELOPMENT=${ALLOWED_ORIGIN_DEVELOPMENT}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENROUTER_URL=${OPENROUTER_URL}
+      - REDIS_HOST=redis
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    restart: unless-stopped

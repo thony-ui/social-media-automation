@@ -8,6 +8,7 @@ import {
 import { PostRepository } from "./posts.repository";
 import logger from "../../../logger";
 import { FolderRepository } from "../../folders/domain/folders.repository";
+import redisClient from "../../../lib/redis";
 
 export class PostService implements IPostService {
   private postRepository: PostRepository;
@@ -29,6 +30,8 @@ export class PostService implements IPostService {
 
       // Create the post
       const post = await this.postRepository.createPost(data);
+      const cacheKey = `posts:${data.userId}`;
+      await redisClient.del(cacheKey); // Invalidate cache
 
       logger.info(`PostService: createPost success for user ${data.userId}`);
       return post;
@@ -98,7 +101,22 @@ export class PostService implements IPostService {
         await this.folderRepository.getFolder(filters.folderId, userId);
       }
 
+      // Create a cache key based on userId and filters
+      const cacheKey = `posts:${userId}`;
+
+      // Try to get cached posts
+      const cached = await redisClient.get(cacheKey);
+      if (cached) {
+        logger.info(`PostService: getPosts cache hit for user ${userId}`);
+        return JSON.parse(cached);
+      }
+
+      // If not cached, fetch from repository
       const posts = await this.postRepository.getPosts(userId, filters);
+
+      // Cache the result (set expiration, e.g. 60 seconds)
+      await redisClient.set(cacheKey, JSON.stringify(posts), "EX", 60);
+
       logger.info(
         `PostService: getPosts success for user ${userId}, found ${posts.length} posts`
       );
