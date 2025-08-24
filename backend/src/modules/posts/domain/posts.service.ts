@@ -115,7 +115,7 @@ export class PostService implements IPostService {
       const posts = await this.postRepository.getPosts(userId, filters);
 
       // Cache the result (set expiration, e.g. 60 seconds)
-      await redisClient.set(cacheKey, JSON.stringify(posts), "EX", 60);
+      await redisClient.set(cacheKey, JSON.stringify(posts));
 
       logger.info(
         `PostService: getPosts success for user ${userId}, found ${posts.length} posts`
