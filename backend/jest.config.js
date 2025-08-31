@@ -1,5 +1,6 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
 module.exports = {
+  testMatch: ["**/*.unit.test.ts"],
   testEnvironment: "node",
   transform: {
     "^.+.tsx?$": ["ts-jest", {}],

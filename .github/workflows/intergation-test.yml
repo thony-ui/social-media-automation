@@ -32,7 +32,7 @@ jobs:
 
       - name: Get Supabase Keys and Set Env Vars
         run: |
-          STATUS=$(supabase status --json)
+          STATUS=$(supabase status -o json)
           echo "SUPABASE_URL=http://127.0.0.1:54321" >> $GITHUB_ENV
           echo "SUPABASE_ANON_KEY=$(echo $STATUS | jq -r '.anon_key')" >> $GITHUB_ENV
           echo "SUPABASE_SERVICE_ROLE_KEY=$(echo $STATUS | jq -r '.service_role_key')" >> $GITHUB_ENV

@@ -2,6 +2,10 @@
 // This file is referenced in jest.config.js setupFilesAfterEnv
 
 // Mock the logger module globally
+import { resetPublicSchema } from "./reset-db";
+beforeEach(async () => {
+  await resetPublicSchema();
+});
 
 jest.mock("../logger", () => ({
   info: jest.fn(),
