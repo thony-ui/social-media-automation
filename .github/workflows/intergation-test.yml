@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Set up Supabase
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase
+        run: supabase start
+
+      - name: Get Supabase Keys and Set Env Vars
+        run: |
+          STATUS=$(supabase status --json)
+          echo "SUPABASE_URL=http://127.0.0.1:54321" >> $GITHUB_ENV
+          echo "SUPABASE_ANON_KEY=$(echo $STATUS | jq -r '.anon_key')" >> $GITHUB_ENV
+          echo "SUPABASE_SERVICE_ROLE_KEY=$(echo $STATUS | jq -r '.service_role_key')" >> $GITHUB_ENV
+          echo "DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres" >> $GITHUB_ENV
+          echo "TEST_USER_EMAIL=t3@example.com" >> $GITHUB_ENV
+          echo "TEST_USER_PASSWORD=pass1234" >> $GITHUB_ENV
+          echo "SECRET_KEY=$(echo $STATUS | jq -r '.jwt_secret')" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: cd backend && npm install
+
+      - name: Run tests
+        run: cd backend && npm run test:integration
+
+      - name: Stop Supabase
+        run: supabase stop
