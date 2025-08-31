@@ -5,6 +5,7 @@ import { defineUserRoutes } from "./modules/user";
 import { Server } from "http";
 import { definePostsRoutes } from "./modules/posts";
 import { defineFolderRoutes } from "./modules/folders";
+import { defineIntegrationsRoutes } from "./modules/integration";
 
 require("dotenv").config(); // Load environment variables from .env file
 
@@ -28,6 +29,7 @@ app.use(bodyParser.json());
 defineUserRoutes(app);
 definePostsRoutes(app);
 defineFolderRoutes(app);
+defineIntegrationsRoutes(app);
 
 const port = process.env.PORT || 8000;
 let server: Server;

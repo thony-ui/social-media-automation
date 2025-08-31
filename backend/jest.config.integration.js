@@ -1,6 +1,7 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
 module.exports = {
-  testMatch: ["**/*.unit.test.ts"],
+  globalSetup: "<rootDir>/src/test-utils/global-setup.ts",
+  testMatch: ["**/*.integration.test.ts"],
   testEnvironment: "node",
   transform: {
     "^.+.tsx?$": ["ts-jest", {}],
@@ -8,5 +9,5 @@ module.exports = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
-  setupFilesAfterEnv: ["<rootDir>/src/test-utils/jest-setup.ts"],
+  setupFilesAfterEnv: ["<rootDir>/src/test-utils/jest-setup-integration.ts"],
 };
